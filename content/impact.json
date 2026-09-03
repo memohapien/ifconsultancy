@@ -1,0 +1,32 @@
+[
+  {
+    "id": "multilateral",
+    "sector": "Multilateral & public sector",
+    "description": "Gender-equality, employment and inclusive-growth programs designed and delivered with United Nations agencies, EU-funded institutions and national ministries."
+  },
+  {
+    "id": "financial",
+    "sector": "Financial services",
+    "description": "Leadership, culture and engagement transformation for banks and investment houses moving through regulatory pressure and digital repositioning."
+  },
+  {
+    "id": "industrial",
+    "sector": "Industrial, automotive & energy",
+    "description": "Operating-model redesign, agile transformation and capability building across multinational manufacturing groups and their supplier ecosystems."
+  },
+  {
+    "id": "consumer",
+    "sector": "Consumer, retail & FMCG",
+    "description": "Talent strategy, employer brand and leadership pipelines for global consumer brands competing in high-turnover, high-visibility markets."
+  },
+  {
+    "id": "technology",
+    "sector": "Technology & ventures",
+    "description": "AI adoption, governance and growth advisory for scale-ups, corporate venture arms and accelerator ecosystems across Europe and Türkiye."
+  },
+  {
+    "id": "healthcare",
+    "sector": "Healthcare & pharmaceuticals",
+    "description": "Executive coaching, organizational design and communication programs for global pharmaceutical and healthcare organizations."
+  }
+]

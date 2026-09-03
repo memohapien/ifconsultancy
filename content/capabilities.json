@@ -1,0 +1,87 @@
+[
+  {
+    "id": "strategy",
+    "name": "Strategy & Organizational Transformation",
+    "summary": "Clarity on where to compete — and an organization built to deliver it.",
+    "description": "We translate strategic intent into operating reality: sharper choices, a coherent operating model, and the structures, rhythms and metrics that make execution predictable.",
+    "tags": [
+      "Corporate & growth strategy",
+      "Vision & strategic narrative",
+      "Operating model design",
+      "Organizational design",
+      "Agile transformation",
+      "OKRs & performance systems",
+      "Productivity & ways of working"
+    ]
+  },
+  {
+    "id": "leadership",
+    "name": "Leadership & Culture",
+    "summary": "The behavioral layer that decides whether strategy survives contact with reality.",
+    "description": "We build leadership capacity where the pressure is highest — executive teams, senior successors and the middle layer that carries change — and shift culture through the systems that actually shape behavior.",
+    "tags": [
+      "Leadership development",
+      "Executive coaching",
+      "Culture transformation",
+      "Employee engagement",
+      "Recognition systems",
+      "Mentoring programs"
+    ]
+  },
+  {
+    "id": "talent",
+    "name": "Talent & the Future of Work",
+    "summary": "Workforce strategy for organizations whose work is being redefined.",
+    "description": "We align workforce strategy with business strategy: the critical roles, the skills that create advantage, and the hiring, onboarding and learning architecture that keeps supply ahead of demand.",
+    "tags": [
+      "Talent strategy & workforce planning",
+      "Talent acquisition",
+      "Onboarding design",
+      "Capability building",
+      "Learning & development architecture",
+      "Skills & competency frameworks"
+    ]
+  },
+  {
+    "id": "ai-tech",
+    "name": "AI, Technology & Innovation",
+    "summary": "From experimentation to adoption at enterprise scale.",
+    "description": "We help leadership teams decide where AI and emerging technology create durable value, then build the governance, capability and operating discipline that turn pilots into production.",
+    "tags": [
+      "AI transformation roadmaps",
+      "AI governance & responsible use",
+      "Emerging technology adoption",
+      "Innovation strategy & portfolios",
+      "Corporate venturing",
+      "Startup & scale-up advisory"
+    ]
+  },
+  {
+    "id": "sustainability",
+    "name": "Sustainability & Inclusive Growth",
+    "summary": "Commercial strategy and social outcomes, treated as one agenda.",
+    "description": "We support organizations and institutions in making sustainability and inclusion operational — measurable, funded, governed, and connected to the core business rather than reported alongside it.",
+    "tags": [
+      "Sustainability strategy",
+      "Circular economy models",
+      "AI-enabled sustainability",
+      "Gender equality programs",
+      "Diversity & inclusion",
+      "Multilateral & donor-funded programs"
+    ]
+  },
+  {
+    "id": "brand",
+    "name": "Brand, Communication & Employer Experience",
+    "summary": "A single, credible story — to the market and to your own people.",
+    "description": "Transformation fails quietly when it is poorly communicated. We build the narrative architecture that keeps executives, employees and candidates aligned on the same direction.",
+    "tags": [
+      "Corporate communication",
+      "Leadership & executive communication",
+      "Employer branding",
+      "Internal communication",
+      "Change communication",
+      "Employee value proposition"
+    ]
+  }
+]
