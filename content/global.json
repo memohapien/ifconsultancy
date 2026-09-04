@@ -1,0 +1,28 @@
+{
+  "stats": [
+    { "value": 2015, "label": "Founded", "plain": true },
+    { "value": 20, "suffix": "+", "label": "Countries delivered in" },
+    { "value": 60, "suffix": "+", "label": "Client organizations" },
+    { "value": 5, "label": "Core markets" }
+  ],
+  "markets": [
+    "Türkiye",
+    "United States",
+    "Belgium",
+    "Germany",
+    "Spain"
+  ],
+  "clientTypes": [
+    "Fortune 500 companies",
+    "Public institutions & ministries",
+    "United Nations agencies",
+    "European Union programs",
+    "International foundations & funders"
+  ],
+  "recognition": [
+    "Award-winning program design",
+    "International judging panels",
+    "Advisory & mentoring roles",
+    "Global consultant network"
+  ]
+}

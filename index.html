@@ -18,6 +18,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,200;0,6..72,300;0,6..72,400;1,6..72,300&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
 
@@ -431,8 +432,9 @@
           <label for="message">What are you working on?</label>
           <textarea id="message" name="message" rows="4" required></textarea>
         </div>
+        <div class="cf-turnstile" data-sitekey="YOUR_SITE_KEY" data-theme="dark"></div>
         <button class="btn btn--accent btn--full" type="submit">Start a conversation</button>
-        <p class="form__note" id="formNote">Opens in your email client, addressed to if@ifconsultancy-tr.com.</p>
+        <p class="form__note" id="formNote"></p>
       </form>
     </div>
   </div>
