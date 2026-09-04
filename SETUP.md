@@ -42,7 +42,17 @@ Uncomment the `[[kv_namespaces]]` block in `wrangler.toml` and paste the `id`.
 3. Create an API key
 4. Set environment variables (see below)
 
-## 5. Environment Variables
+## 5. KV Namespace (CMS content storage)
+
+```bash
+wrangler kv namespace create CONTENT_KV
+```
+
+Uncomment the `[[kv_namespaces]]` CONTENT_KV block in `wrangler.toml` and paste the `id`.
+
+Content stored in KV takes priority over static JSON files. The admin panel at `/admin/` writes to KV; the site reads from KV first and falls back to `/content/*.json` if KV is empty or unavailable.
+
+## 6. Environment Variables
 
 Set these in **Cloudflare Dashboard → Pages → Settings → Environment variables**:
 
@@ -52,8 +62,17 @@ Set these in **Cloudflare Dashboard → Pages → Settings → Environment varia
 | `RESEND_API_KEY` | Resend API key | `re_...` |
 | `RESEND_FROM` | Sender address | `IF Consultancy <noreply@ifconsultancy-tr.com>` |
 | `NOTIFY_EMAIL` | Notification recipient | `if@ifconsultancy-tr.com` |
+| `ADMIN_KEY` | Secret key for admin panel auth | Any strong random string |
 
-## 6. R2 Bucket (logo storage — Phase 2)
+## 7. Admin Panel
+
+The admin panel is available at `/admin/`. It provides a JSON editor for all dynamic content types (Capabilities, Impact, Global, Nexus, Logos).
+
+**Authentication:** Uses the `ADMIN_KEY` environment variable. Enter the key to log in.
+
+**Recommended:** Protect `/admin/*` with [Cloudflare Access](https://developers.cloudflare.com/cloudflare-one/applications/configure-apps/) for an additional authentication layer before the admin key prompt.
+
+## 8. R2 Bucket (logo storage — Phase 2)
 
 ```bash
 wrangler r2 bucket create ifconsultancy-logos
@@ -61,17 +80,21 @@ wrangler r2 bucket create ifconsultancy-logos
 
 Uncomment the `[[r2_buckets]]` block in `wrangler.toml`.
 
-## Content Files
+## Content Management
 
-Dynamic content is served from `/content/*.json`:
+Content can be managed two ways:
 
-- `capabilities.json` — Capabilities accordion + contact form topics
-- `impact.json` — Selected impact entries
-- `global.json` — Stats, markets, client types, recognition
-- `nexus.json` — IF Nexus features
-- `logos.json` — Client logo wall data
+1. **Admin panel (recommended):** Go to `/admin/`, log in with your `ADMIN_KEY`, edit JSON, and save. Changes go live within ~60 seconds via Cloudflare KV.
 
-Edit these files directly and push to update the site content.
+2. **Static files (fallback):** Edit `/content/*.json` files directly and push to the repository. These are used when KV has no data for a content type.
+
+Content types:
+
+- `capabilities` — Capabilities accordion + contact form topics
+- `impact` — Selected impact entries
+- `global` — Stats, markets, client types, recognition
+- `nexus` — IF Nexus features
+- `logos` — Client logo wall data
 
 ## Local Development
 

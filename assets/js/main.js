@@ -109,8 +109,11 @@
   var staticLogos = window.IF_LOGOS || [];
   buildWall(staticLogos);
 
-  fetch('/content/logos.json')
+  fetch('/api/content/logos')
     .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+    .catch(function () {
+      return fetch('/content/logos.json').then(function (r) { return r.ok ? r.json() : Promise.reject(); });
+    })
     .then(function (data) {
       if (data && data.length) {
         buildWall(data);
@@ -276,25 +279,19 @@
     }
   }
 
-  fetch('/content/capabilities.json')
-    .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
-    .then(renderCapabilities)
-    .catch(function () {});
+  function fetchContent(type) {
+    return fetch('/api/content/' + type)
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+      .catch(function () {
+        return fetch('/content/' + type + '.json')
+          .then(function (r) { return r.ok ? r.json() : Promise.reject(); });
+      });
+  }
 
-  fetch('/content/impact.json')
-    .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
-    .then(renderImpact)
-    .catch(function () {});
-
-  fetch('/content/global.json')
-    .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
-    .then(renderGlobal)
-    .catch(function () {});
-
-  fetch('/content/nexus.json')
-    .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
-    .then(renderNexus)
-    .catch(function () {});
+  fetchContent('capabilities').then(renderCapabilities).catch(function () {});
+  fetchContent('impact').then(renderImpact).catch(function () {});
+  fetchContent('global').then(renderGlobal).catch(function () {});
+  fetchContent('nexus').then(renderNexus).catch(function () {});
 
   /* ========== 7. Mobile menu ========== */
   var toggle = document.getElementById('navToggle');

@@ -21,6 +21,12 @@ pages_build_output_dir = "."
 # binding = "RATE_KV"
 # id = ""
 
+# KV Namespace — for CMS content storage
+# Create: wrangler kv namespace create CONTENT_KV
+# [[kv_namespaces]]
+# binding = "CONTENT_KV"
+# id = ""
+
 # R2 Bucket — for logo image storage (Phase 2)
 # Create: wrangler r2 bucket create ifconsultancy-logos
 # [[r2_buckets]]
@@ -32,3 +38,4 @@ pages_build_output_dir = "."
 # RESEND_API_KEY       — Resend transactional email API key
 # RESEND_FROM          — Sender address (e.g. "IF Consultancy <noreply@ifconsultancy-tr.com>")
 # NOTIFY_EMAIL         — Notification recipient (default: if@ifconsultancy-tr.com)
+# ADMIN_KEY            — Secret key for admin panel authentication
