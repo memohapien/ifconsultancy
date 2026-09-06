@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IF Consultancy — Admin</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+:root{--ink:#0B0E0F;--paper:#FFFFFF;--mist:#EFEFEB;--line:#DCDCD5;--muted:#6E7573;--accent:#0F6B5F;--accent-lift:#17897A;--danger:#C0392B;--f-body:"Archivo","Helvetica Neue",Arial,sans-serif;--f-mono:"IBM Plex Mono",ui-monospace,monospace}
+*{box-sizing:border-box}
+body{margin:0;background:var(--mist);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
+.top{background:var(--ink);color:#fff;padding:16px 24px;display:flex;align-items:center;gap:16px}
+.top h1{font-size:16px;font-weight:500;margin:0;flex:1}
+.top a{color:#7FD8CB;text-decoration:none;font-size:13px}
+.auth{max-width:420px;margin:80px auto;background:#fff;padding:32px;border:1px solid var(--line)}
+.auth label{display:block;font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.auth input{width:100%;padding:10px;border:1px solid var(--line);font:inherit;margin-bottom:16px}
+.wrap{max-width:960px;margin:0 auto;padding:24px}
+.tabs{display:flex;gap:2px;margin-bottom:0}
+.tab{padding:10px 18px;background:#fff;border:1px solid var(--line);border-bottom:0;cursor:pointer;font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.tab.is-on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.editor{background:#fff;border:1px solid var(--line);padding:24px}
+.editor textarea{width:100%;min-height:420px;font-family:var(--f-mono);font-size:13px;line-height:1.5;border:1px solid var(--line);padding:12px;resize:vertical;tab-size:2}
+.bar{display:flex;gap:12px;align-items:center;margin-top:16px}
+.btn{padding:10px 22px;border:0;cursor:pointer;font:inherit;font-size:14px;font-weight:500}
+.btn--accent{background:var(--accent);color:#fff}
+.btn--accent:hover{background:var(--accent-lift)}
+.btn--ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+.btn--danger{background:var(--danger);color:#fff}
+.msg{font-size:13px;color:var(--muted);flex:1;text-align:right}
+.msg.is-ok{color:var(--accent)}
+.msg.is-err{color:var(--danger)}
+.hidden{display:none}
+.preview{margin-top:20px;padding:16px;background:var(--mist);border:1px solid var(--line);font-size:13px;max-height:300px;overflow:auto}
+.preview table{border-collapse:collapse;width:100%}
+.preview th,.preview td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--line);font-size:13px}
+.preview th{font-family:var(--f-mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <h1>IF Consultancy — Content Admin</h1>
+  <a href="/" target="_blank">← Site</a>
+  <a href="#" id="logout">Logout</a>
+</div>
+
+<div class="auth" id="authPanel">
+  <label>Admin Key</label>
+  <input type="password" id="keyInput" placeholder="Enter admin key">
+  <button class="btn btn--accent" id="loginBtn" style="width:100%">Login</button>
+</div>
+
+<div class="wrap hidden" id="main">
+  <div class="tabs" id="tabs"></div>
+  <div class="editor">
+    <textarea id="content" spellcheck="false"></textarea>
+    <div class="bar">
+      <button class="btn btn--accent" id="saveBtn">Save</button>
+      <button class="btn btn--ghost" id="loadBtn">Reload</button>
+      <button class="btn btn--ghost" id="formatBtn">Format</button>
+      <button class="btn btn--ghost" id="previewBtn">Preview</button>
+      <span class="msg" id="msg"></span>
+    </div>
+    <div class="preview hidden" id="preview"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var TYPES = [
+    { id: 'capabilities', label: 'Capabilities' },
+    { id: 'impact', label: 'Impact' },
+    { id: 'global', label: 'Global' },
+    { id: 'nexus', label: 'Nexus' },
+    { id: 'logos', label: 'Logos' }
+  ];
+
+  var key = '';
+  var current = TYPES[0].id;
+
+  var authPanel = document.getElementById('authPanel');
+  var mainPanel = document.getElementById('main');
+  var keyInput = document.getElementById('keyInput');
+  var loginBtn = document.getElementById('loginBtn');
+  var logoutBtn = document.getElementById('logout');
+  var tabsEl = document.getElementById('tabs');
+  var contentEl = document.getElementById('content');
+  var saveBtn = document.getElementById('saveBtn');
+  var loadBtn = document.getElementById('loadBtn');
+  var formatBtn = document.getElementById('formatBtn');
+  var previewBtn = document.getElementById('previewBtn');
+  var msgEl = document.getElementById('msg');
+  var previewEl = document.getElementById('preview');
+
+  var stored = sessionStorage.getItem('admin_key');
+  if (stored) { key = stored; showMain(); }
+
+  loginBtn.addEventListener('click', function () {
+    key = keyInput.value.trim();
+    if (!key) return;
+    sessionStorage.setItem('admin_key', key);
+    showMain();
+  });
+
+  keyInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') loginBtn.click();
+  });
+
+  logoutBtn.addEventListener('click', function (e) {
+    e.preventDefault();
+    sessionStorage.removeItem('admin_key');
+    key = '';
+    authPanel.classList.remove('hidden');
+    mainPanel.classList.add('hidden');
+    keyInput.value = '';
+  });
+
+  function showMain() {
+    authPanel.classList.add('hidden');
+    mainPanel.classList.remove('hidden');
+    buildTabs();
+    loadContent(current);
+  }
+
+  function buildTabs() {
+    tabsEl.innerHTML = TYPES.map(function (t) {
+      return '<button class="tab' + (t.id === current ? ' is-on' : '') + '" data-type="' + t.id + '">' + t.label + '</button>';
+    }).join('');
+
+    tabsEl.addEventListener('click', function (e) {
+      var btn = e.target.closest('.tab');
+      if (!btn) return;
+      current = btn.getAttribute('data-type');
+      tabsEl.querySelectorAll('.tab').forEach(function (t) {
+        t.classList.toggle('is-on', t.getAttribute('data-type') === current);
+      });
+      previewEl.classList.add('hidden');
+      loadContent(current);
+    });
+  }
+
+  function setMsg(text, type) {
+    msgEl.textContent = text;
+    msgEl.className = 'msg' + (type === 'ok' ? ' is-ok' : type === 'err' ? ' is-err' : '');
+  }
+
+  function loadContent(type) {
+    setMsg('Loading…');
+    fetch('/api/content/' + type)
+      .then(function (r) {
+        if (r.ok) return r.text();
+        return fetch('/content/' + type + '.json').then(function (r2) {
+          if (r2.ok) return r2.text();
+          return '[]';
+        });
+      })
+      .then(function (text) {
+        try {
+          contentEl.value = JSON.stringify(JSON.parse(text), null, 2);
+        } catch (e) {
+          contentEl.value = text;
+        }
+        setMsg('Loaded', 'ok');
+      })
+      .catch(function () {
+        setMsg('Load failed', 'err');
+      });
+  }
+
+  saveBtn.addEventListener('click', function () {
+    var val = contentEl.value.trim();
+    try {
+      JSON.parse(val);
+    } catch (e) {
+      setMsg('Invalid JSON: ' + e.message, 'err');
+      return;
+    }
+
+    setMsg('Saving…');
+    saveBtn.disabled = true;
+
+    fetch('/api/content/' + current, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + key
+      },
+      body: val
+    })
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      if (d.success) {
+        setMsg('Saved — live in ~60s', 'ok');
+      } else {
+        setMsg(d.error || 'Save failed', 'err');
+      }
+    })
+    .catch(function () { setMsg('Network error', 'err'); })
+    .finally(function () { saveBtn.disabled = false; });
+  });
+
+  loadBtn.addEventListener('click', function () { loadContent(current); });
+
+  formatBtn.addEventListener('click', function () {
+    try {
+      contentEl.value = JSON.stringify(JSON.parse(contentEl.value), null, 2);
+      setMsg('Formatted', 'ok');
+    } catch (e) {
+      setMsg('Invalid JSON', 'err');
+    }
+  });
+
+  previewBtn.addEventListener('click', function () {
+    previewEl.classList.toggle('hidden');
+    if (previewEl.classList.contains('hidden')) return;
+    try {
+      var data = JSON.parse(contentEl.value);
+      previewEl.innerHTML = renderPreview(current, data);
+    } catch (e) {
+      previewEl.innerHTML = '<p style="color:var(--danger)">Invalid JSON</p>';
+    }
+  });
+
+  function esc(s) { var d = document.createElement('span'); d.textContent = s || ''; return d.innerHTML; }
+
+  function renderPreview(type, data) {
+    if (type === 'capabilities') {
+      return '<table><tr><th>Name</th><th>Summary</th><th>Tags</th></tr>' +
+        data.map(function (c) {
+          return '<tr><td>' + esc(c.name) + '</td><td>' + esc(c.summary) + '</td><td>' + (c.tags || []).length + '</td></tr>';
+        }).join('') + '</table>';
+    }
+    if (type === 'impact') {
+      return '<table><tr><th>Sector</th><th>Description</th></tr>' +
+        data.map(function (i) {
+          return '<tr><td>' + esc(i.sector) + '</td><td>' + esc(i.description).substring(0, 80) + '…</td></tr>';
+        }).join('') + '</table>';
+    }
+    if (type === 'global') {
+      var html = '<p><strong>Stats:</strong> ' + (data.stats || []).map(function (s) { return s.label + ': ' + s.value + (s.suffix || ''); }).join(' · ') + '</p>';
+      html += '<p><strong>Markets:</strong> ' + (data.markets || []).join(', ') + '</p>';
+      html += '<p><strong>Client types:</strong> ' + (data.clientTypes || []).join(', ') + '</p>';
+      return html;
+    }
+    if (type === 'nexus') {
+      return '<p><strong>Headline:</strong> ' + esc(data.headline) + '</p>' +
+        '<p><strong>Features:</strong> ' + (data.features || []).join(', ') + '</p>';
+    }
+    if (type === 'logos') {
+      var total = data.reduce(function (s, row) { return s + row.length; }, 0);
+      return '<p>' + data.length + ' rows, ' + total + ' logos total</p>' +
+        '<table><tr><th>Row</th><th>Count</th><th>First</th></tr>' +
+        data.map(function (row, i) {
+          return '<tr><td>' + (i + 1) + '</td><td>' + row.length + '</td><td>' + esc(row[0] ? row[0].n : '') + '</td></tr>';
+        }).join('') + '</table>';
+    }
+    return '<pre>' + esc(JSON.stringify(data, null, 2)) + '</pre>';
+  }
+})();
+</script>
+</body>
+</html>
